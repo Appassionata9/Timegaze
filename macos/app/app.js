@@ -50,6 +50,15 @@ const TRANSLATIONS = {
     category_work: "Work", category_study: "Study", category_reading: "Reading", category_creative: "Creative", category_other: "Other",
   },
 };
+const nativeHost = window.timegazeNative;
+if (nativeHost?.platform === "win32") {
+  TRANSLATIONS["zh-CN"].menuBar = "系统托盘";
+  TRANSLATIONS["zh-CN"].minimizeToMenuBar = "最小化到系统托盘";
+  TRANSLATIONS["zh-CN"].statusTooltip = "观时 · Timegaze · 点击打开";
+  TRANSLATIONS.en.menuBar = "System tray";
+  TRANSLATIONS.en.minimizeToMenuBar = "Minimize to system tray";
+  TRANSLATIONS.en.statusTooltip = "观时 · Timegaze · Click to open";
+}
 const CATEGORY_KEYS = { "工作": "category_work", "学习": "category_study", "阅读": "category_reading", "创作": "category_creative", "其他": "category_other" };
 const state = {
   content: "",
@@ -261,6 +270,16 @@ function updateNativePresentation(force = false) {
       statusTooltip: t("statusTooltip"),
     });
   }
+  nativeHost?.updatePresentation?.({
+    compact,
+    alwaysOnTop: state.preferences.alwaysOnTop,
+    timerActive,
+    displayMode: state.preferences.timerDisplayMode,
+    timeText,
+    language: state.preferences.language,
+    appName: t("appName"),
+    statusTooltip: t("statusTooltip"),
+  });
 }
 
 function setCompactMode(compact) {
@@ -272,6 +291,7 @@ window.restoreFromMenuBar = function restoreFromMenuBar() {
   state.presentationExpanded = true;
   updateNativePresentation(true);
 };
+nativeHost?.onRestore?.(() => window.restoreFromMenuBar());
 
 function renderTimer() {
   $("timer").textContent = formatClock(state.remainingSeconds);
