@@ -1,0 +1,62 @@
+{
+  "name": "timegaze-windows",
+  "version": "1.0.0",
+  "description": "观时 · Timegaze for Windows",
+  "author": "Andy",
+  "private": true,
+  "main": "main.cjs",
+  "scripts": {
+    "start": "node prepare-icon.cjs && electron .",
+    "build": "node prepare-icon.cjs && electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "43.1.1",
+    "electron-builder": "26.15.3",
+    "sharp": "0.34.5"
+  },
+  "build": {
+    "appId": "local.chenjin.focus.windows",
+    "productName": "观时 · Timegaze",
+    "asar": true,
+    "directories": {
+      "output": "../release/windows",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "prepare-icon.cjs",
+      "build/icon.png"
+    ],
+    "extraResources": [
+      {
+        "from": "../macos/app",
+        "to": "app",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "artifactName": "Timegaze-Windows-Setup-${version}-${arch}.${ext}",
+      "forceCodeSigning": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "观时 · Timegaze"
+    }
+  }
+}
