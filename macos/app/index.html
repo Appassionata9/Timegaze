@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>观时 · Timegaze</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark"></span><span data-i18n="appName">观时 · Timegaze</span></div>
+      <div class="topbar-actions">
+        <label class="language-picker"><span data-i18n="language">语言</span><select id="language-select" aria-label="语言"><option value="zh-CN">中文</option><option value="en">English</option></select></label>
+        <div class="date-pill" id="today-label"></div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <article class="panel timer-panel">
+        <div class="timer-heading"><div><p class="eyebrow">FOCUS SESSION</p><h1 data-i18n="heroTitle">把注意力，留给此刻重要的事。</h1></div><span class="focus-badge" data-i18n="focusMode">专注模式</span></div>
+        <div class="fields">
+          <label class="content-field"><span data-i18n="focusPrompt">这次要专注什么？</span><span class="content-input-wrap"><input id="content" maxlength="120" placeholder="例如：完成报告的结论部分" data-i18n-placeholder="focusPlaceholder" autocomplete="off"><button id="content-history-trigger" class="content-history-trigger" type="button" aria-label="查看历史内容" data-i18n-aria-label="showContentHistory">↺</button></span><span class="content-history-menu" id="content-history-menu"></span></label>
+          <label><span data-i18n="category">分类</span><select id="category"><option value="工作" data-category="工作">工作</option><option value="学习" data-category="学习">学习</option><option value="阅读" data-category="阅读">阅读</option><option value="创作" data-category="创作">创作</option><option value="其他" data-category="其他">其他</option></select></label>
+        </div>
+        <div class="duration-row" id="duration-row">
+          <button data-minutes="25" class="active" data-duration-label="25">25 分钟</button>
+          <button data-minutes="45" data-duration-label="45">45 分钟</button>
+          <button data-minutes="60" data-duration-label="60">60 分钟</button>
+          <label class="custom-duration"><span data-i18n="custom">自定义</span> <input id="custom-minutes" type="number" min="1" max="240" inputmode="numeric" placeholder="30"> <span data-i18n="minutesUnit">分钟</span></label>
+        </div>
+        <div class="preference-row">
+          <label class="preference"><input id="auto-break" type="checkbox"><span class="switch-track"></span><span data-i18n="autoBreak">自动休息</span></label>
+          <select id="break-minutes" aria-label="休息时长" data-i18n-aria-label="breakDuration"><option value="5" data-duration-label="5">5 分钟</option><option value="10" data-duration-label="10">10 分钟</option></select>
+          <span class="preference-divider"></span>
+          <label class="preference"><input id="always-on-top" type="checkbox"><span class="switch-track"></span><span data-i18n="alwaysOnTop">紧凑窗口置顶</span></label>
+          <span class="preference-divider"></span>
+          <label class="display-mode-label"><span data-i18n="timerDisplay">计时显示</span> <select id="timer-display-mode" aria-label="计时显示方式" data-i18n-aria-label="timerDisplayMode"><option value="floating" data-i18n="floatingWindow">悬浮窗口</option><option value="menuBar" data-i18n="menuBar">菜单栏</option></select></label>
+        </div>
+        <div class="timer-stage">
+          <div class="timer-ring" id="timer-ring"><div class="timer-face"><span class="timer-mode-label" id="timer-mode-label"></span><div class="timer" id="timer">25:00</div></div></div>
+        </div>
+        <p class="status" id="status">准备好后，开始一段不被打扰的时间。</p>
+        <div class="actions" id="actions"></div>
+        <p class="error" id="error"></p>
+      </article>
+
+      <aside class="panel summary-panel">
+        <p class="section-label" data-i18n="todayFocus">今日投入</p>
+        <p class="today-number"><span id="today-minutes">0</span><small data-i18n="minutesUnit">分钟</small></p>
+        <p class="today-caption" data-i18n="todayCaption">每一小段投入，都在累积。</p>
+        <div class="metrics">
+          <div><strong id="today-count">0</strong><span data-i18n="todayCount">今日次数</span></div>
+          <div><strong id="total-time">0 分钟</strong><span data-i18n="totalFocus">累计专注</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-heading"><span data-i18n="goalProgress">目标进度</span><small data-i18n="editable">可直接修改</small></div>
+          <div class="goal-item">
+            <div class="goal-copy"><span data-i18n="dailyGoal">每日目标</span><label><input id="daily-goal" type="number" min="1" max="1440"> <span data-i18n="minutesUnit">分钟</span></label></div>
+            <div class="goal-track"><span id="daily-goal-bar"></span></div><small id="daily-goal-copy"></small>
+          </div>
+          <div class="goal-item">
+            <div class="goal-copy"><span data-i18n="weeklyGoal">每周目标</span><label><input id="weekly-goal" type="number" min="1" max="10080"> <span data-i18n="minutesUnit">分钟</span></label></div>
+            <div class="goal-track"><span id="weekly-goal-bar"></span></div><small id="weekly-goal-copy"></small>
+          </div>
+        </div>
+        <h2 data-i18n="lastSevenDays">近 7 天</h2>
+        <div class="week-chart" id="week-chart"></div>
+        <div class="category-list" id="category-list"></div>
+      </aside>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="history-head"><h2 data-i18n="focusHistory">专注记录</h2><span id="record-count">共 0 次记录</span></div>
+      <div id="history-list"></div>
+    </section>
+
+    <section class="insights-grid">
+      <article class="panel heatmap-panel">
+        <div class="insight-heading"><div><p class="section-label">FOCUS CALENDAR</p><h2 data-i18n="focusCalendar">专注日历</h2></div><span data-i18n="lastTwelveWeeks">近 12 周</span></div>
+        <div class="heatmap-layout"><div class="weekday-labels"><span data-weekday="1">一</span><span data-weekday="3">三</span><span data-weekday="5">五</span><span data-weekday="0">日</span></div><div class="heatmap" id="heatmap"></div></div>
+        <div class="heatmap-legend"><span data-i18n="less">少</span><i data-level="0"></i><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i><span data-i18n="more">多</span></div>
+      </article>
+      <article class="panel report-panel">
+        <div class="insight-heading"><div><p class="section-label">WEEKLY REVIEW</p><h2 data-i18n="weeklyReview">本周回顾</h2></div><span id="report-range"></span></div>
+        <div class="report-total"><strong id="report-total">0 分钟</strong><span id="report-change">暂无变化</span></div>
+        <div class="report-grid">
+          <div><span data-i18n="completedCount">完成次数</span><strong id="report-count">0 次</strong></div>
+          <div><span data-i18n="bestDay">最高效日期</span><strong id="report-best">暂无</strong></div>
+          <div><span data-i18n="topCategory">主要投入</span><strong id="report-category">暂无</strong></div>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
