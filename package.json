@@ -1,0 +1,12 @@
+{
+  "name": "timegaze",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:mac": "zsh macos/restore-icon.sh && zsh macos/build-app.sh"
+  },
+  "dependencies": {
+    "sharp": "0.34.5"
+  }
+}
