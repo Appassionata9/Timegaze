@@ -7,7 +7,7 @@
   "main": "main.cjs",
   "scripts": {
     "start": "node prepare-icon.cjs && electron .",
-    "build": "node prepare-icon.cjs && electron-builder --win nsis"
+    "build": "node prepare-icon.cjs && electron-builder --win nsis --x64 --arm64"
   },
   "devDependencies": {
     "electron": "43.1.1",
