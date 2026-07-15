@@ -1,0 +1,42 @@
+name: Build macOS release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build:mac
+
+      - name: Create download archive
+        run: ditto -c -k --sequesterRsrc --keepParent "release/观时 · Timegaze.app" release/Timegaze-macOS.zip
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v1.0.0; then
+            gh release upload v1.0.0 release/Timegaze-macOS.zip --clobber
+          else
+            gh release create v1.0.0 release/Timegaze-macOS.zip --title "观时 · Timegaze 1.0.0" --notes "macOS 14.0 或更高版本。解压后将应用拖入“应用程序”文件夹；首次打开请在 Finder 中右键并选择“打开”。"
+          fi
